@@ -1,0 +1,147 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: #0B0F19;
+    color: #E5E7EB;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0B0F19;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #374151;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #4B5563;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-card/80 backdrop-blur-md border border-white/5 rounded-2xl;
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300 hover:bg-card-hover hover:border-white/10 hover:shadow-lg hover:shadow-primary/5;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary-light to-accent-cyan bg-clip-text text-transparent;
+  }
+
+  .gradient-border {
+    @apply relative;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(6, 182, 212, 0.1));
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .btn-primary {
+    @apply bg-gradient-to-r from-primary to-primary-light text-white font-semibold px-6 py-3 rounded-xl
+    transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:scale-[1.02]
+    active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100;
+  }
+
+  .btn-secondary {
+    @apply bg-card text-gray-300 font-medium px-6 py-3 rounded-xl border border-white/10
+    transition-all duration-300 hover:bg-card-hover hover:text-white hover:border-white/20;
+  }
+
+  .input-field {
+    @apply w-full bg-secondary-bg border border-white/10 text-gray-200 rounded-xl px-4 py-3
+    placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50
+    transition-all duration-200;
+  }
+
+  .stat-card {
+    @apply glass-card p-6 relative overflow-hidden;
+  }
+
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #374151 transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #374151;
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #4B5563;
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-flow 15s ease infinite;
+  }
+
+  .floating {
+    animation: floating 3s ease-in-out infinite;
+  }
+}
+
+@keyframes gradient-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes floating {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+/* React Calendar Heatmap Custom Styles */
+.react-calendar-heatmap .color-empty {
+  fill: #1F2937;
+}
+.react-calendar-heatmap .color-scale-1 {
+  fill: #1e3a5f;
+}
+.react-calendar-heatmap .color-scale-2 {
+  fill: #2563EB;
+}
+.react-calendar-heatmap .color-scale-3 {
+  fill: #3B82F6;
+}
+.react-calendar-heatmap .color-scale-4 {
+  fill: #60A5FA;
+}
+.react-calendar-heatmap text {
+  fill: #6B7280;
+  font-size: 8px;
+}
+.react-calendar-heatmap rect:hover {
+  stroke: #E5E7EB;
+  stroke-width: 1;
+}

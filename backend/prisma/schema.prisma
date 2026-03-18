@@ -1,0 +1,149 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String         @id @default(uuid())
+  name            String
+  email           String         @unique
+  password        String
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  weight          Float?         // in kg
+  height          Float?         // in cm
+  experienceLevel String?        // Beginner, Intermediate, Advanced
+  workouts        Workout[]
+  progress        Progress[]
+  bodyMetrics     BodyMetric[]
+  workoutPlans    WorkoutPlan[]
+  streak          Streak?
+  goals           Goal[]
+}
+
+model Workout {
+  id             String     @id @default(uuid())
+  userId         String
+  user           User       @relation(fields: [userId], references: [id])
+  workoutType    String     // e.g., Strength, Cardio, HIIT, Calisthenics, Mixed
+  muscleGroup    String?    // e.g., Chest, Back, Legs, Shoulders, Biceps, Triceps, Core, Full Body
+  totalCalories  Int        @default(0)
+  totalVolume    Float      @default(0) // volume = sets × reps × weight
+  rating         String?    // Light, Moderate, Intense, Elite
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  exercises      Exercise[]
+  cardio         Cardio[]
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model Exercise {
+  id           String   @id @default(uuid())
+  workoutId    String
+  workout      Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  exerciseName String
+  exerciseType String   @default("strength") // strength, bodyweight, core, cardio, hiit
+  sets         Int
+  reps         Int
+  weight       Float
+  volume       Float    @default(0)
+
+  @@index([workoutId])
+  @@index([exerciseName])
+}
+
+model ExerciseLibrary {
+  id           String   @id @default(uuid())
+  name         String   @unique
+  muscleGroup  String
+  exerciseType String
+  equipment    String?
+}
+
+model WorkoutPlan {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dayOfWeek    String   // Monday, Tuesday, etc.
+  workoutType  String
+  muscleGroup  String?
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model BodyMetric {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  weight      Float?
+  bodyFat     Float?
+  chest       Float?
+  waist       Float?
+  arms        Float?
+  thighs      Float?
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model Streak {
+  id                     String   @id @default(uuid())
+  userId                 String   @unique
+  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currentStreak          Int      @default(0)
+  longestStreak          Int      @default(0)
+  lastWorkoutDate        DateTime?
+  weeklyConsistencyScore Float    @default(0)
+  updatedAt              DateTime @updatedAt
+}
+
+model Cardio {
+  id          String   @id @default(uuid())
+  workoutId   String
+  workout     Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  cardioType  String   // Running, Cycling, Rowing, Walking, Jump Rope
+  duration    Int      // minutes
+  intensity   String   // Low, Moderate, High
+  calories    Int
+
+  @@index([workoutId])
+}
+
+model Progress {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  weight      Float?
+  bodyFat     Float?
+  measurement String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model Goal {
+  id                String   @id @default(uuid())
+  userId            String
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  weeklyWorkoutGoal Int      @default(0)
+  calorieGoal       Int      @default(0)
+  goalType          String?  // Weight Loss, Muscle Gain, Bulking, Fat Loss, Endurance, Strength
+  targetDuration    String?  // 4 weeks, 8 weeks, 12 weeks, 16 weeks
+  completed         Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([userId])
+}
